@@ -1,5 +1,5 @@
 # New Note Diagram
-:::mermaid
+```mermaid
 sequenceDiagram
 participant Browser
 participant Server
@@ -36,5 +36,5 @@ deactivate Server
 
 note right of Browser: The browser execute the callback function that display the notes
 
-:::
+```
 

@@ -1,5 +1,5 @@
 # New Notes In Single Page App Digaram
-::: mermaid
+``` mermaid
 sequenceDiagram
 participant browser
 participant server
@@ -11,4 +11,4 @@ note left of server: update data.json with the new data
 
 server -->> browser: {"message":"note created"}
 
-:::
+```
