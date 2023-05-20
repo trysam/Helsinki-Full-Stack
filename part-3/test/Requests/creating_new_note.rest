@@ -2,7 +2,7 @@ POST http://localhost:3001/api/notes HTTP/1.1
 Content-Type: application/json
 
 {
-    "content": "It is a good day, I will make it count",
+    "content": "It is a good day, I will do my best",
     "important": true
 }
 
@@ -10,7 +10,16 @@ Content-Type: application/json
 GET http://localhost:3001/api/notes HTTP/1.1
 
 ###
-DELETE http://localhost:3001/api/notes/3 HTTP/1.1
+DELETE http://localhost:3001/api/notes/64621a2fabaa36e345520caf HTTP/1.1
 
 ###
-GET http://localhost:3001/api/notes/3 HTTP/1.1
+GET http://localhost:3001/api/notes/64621a2fabaa36e345520caf HTTP/1.1
+
+###
+PUT  http://localhost:3001/api/notes HTTP/1.1
+Content-Type: application/json
+
+{
+    "content": "It is a good day, I will do my best",
+    "important": false
+}
