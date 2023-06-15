@@ -43,7 +43,7 @@ const App = () => {
                 (array,person) => person.id === oldPerson[0].id ? [...array , data] : [...array , person], [])))
               : alert('Cancelled')
               : server.addNewData({name:newName, number:newNumber}).then(
-                  data => setPersons(persons.concat(data)));
+                  data => setPersons(persons.concat(data))).catch(data => window.alert(data.response.data.error));
 
     setNewName('');
     setNewNumber('') ;  
