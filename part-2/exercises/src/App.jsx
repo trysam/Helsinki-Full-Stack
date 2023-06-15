@@ -1,11 +1,18 @@
 import {useState, useEffect} from "react";
-import Note from "./note";
-import nodeService from "./services/node"
+import DisplayNotes from "./displayNotes";
+import Form from "./form";
+import Title from "./title";
+import SearchAppBar from "./searchAppBar";
+import nodeService from "./services/node";
+import { CssBaseline } from "@mui/material";
+
 
 const App = () => {
   const [input, setInput] = useState('')
   const [notes, setNote] = useState([])
   const [view, setView] = useState(true)
+
+  const toggleTitle =  () => setView(!view);
 
   const handleChange = (event) =>{
     setInput(event.target.value);
@@ -32,7 +39,7 @@ const App = () => {
       data => setNote(data)
     )}, [])
     
-  const noteToDisplay = view ? notes : notes.filter(item => item.important)      
+  const noteToDisplay = view ? notes : notes.filter(item => item.important);      
 
   const addNote = (event) => {
     event.preventDefault()
@@ -45,7 +52,7 @@ const App = () => {
     nodeService.addResource(newNote).then(
       data => {
         setNote(notes.concat(data));
-        setInput(" ")
+        setInput(' ');
       } 
     )
   }
@@ -53,18 +60,14 @@ const App = () => {
 
   return (
     <div>
-      <h1>{view? "All" : "Important"} Notes</h1>
-      <button onClick={() => setView(!view)}>Show {view?"important": "All"}</button>      
-      <ul>
-        {noteToDisplay.map((note) => <Note key={note.id} note={note} 
-        toggleImportance={() => toggleImportance(note.id)} deleteNote={() => deleteNote(note.id)}/>)}
-      </ul>
-
-      <form onSubmit={addNote} >
-        <input value={input} onChange={handleChange} placeholder={"Write here"}></input>
-        <button type="submit">Save</button>
-      </form>
-
+      <SearchAppBar view={view} toggleTitle={toggleTitle}/>
+      <main>
+        <CssBaseline />
+        <Title />
+        <Form addNote={addNote} handleChange={handleChange} input={input}/>
+        <DisplayNotes noteToDisplay={noteToDisplay} toggleImportance={toggleImportance} deleteNote={deleteNote} />     
+        
+      </main>
     </div>
   );
 }
