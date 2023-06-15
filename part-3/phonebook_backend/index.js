@@ -1,12 +1,16 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors')
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
+app.use(cors());
+app.use(express.static('build'))
 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body', 'dev'))
+
 
 let Persons = [
     { 
@@ -75,17 +79,23 @@ app.post('/api/persons', (request, response) => {
     
 
     if (Persons.find(person =>person.number === body.number)){
-        return response.status(405).json({error:"Contact already exist"})
+        return response.status(400).json({error:"Contact already exist"})
     }          
     
     if(person) {
         Persons = Persons.concat(person)
         response.status(201).json(person)
-    } else return response.status(405).json({error:"Incomplete contact details"})
+    } else return response.status(400).json({error:"Incomplete contact details"})
     
 })
 
-const PORT = 3001;
+const unKnownEndPoint = (request, response) => {
+    response.status(404).send({error:"unknown endpoint"})
+}
+
+app.use(unKnownEndPoint)
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

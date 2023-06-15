@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.126351d9.css","mappings":"AAAA,GACI,WAAY,CACZ,iBACF,CAEF,QACI,UAAW,CAEX,cAAe,CADf,eAEJ","sources":["index.css"],"sourcesContent":["h2 {\r\n    color: green;\r\n    font-style: italic;\r\n  }\r\n\r\n.person {\r\n    color: grey;\r\n    padding-top: 3px;\r\n    font-size: 15px;\r\n}"],"names":[],"sourceRoot":""}
