@@ -1,4 +1,4 @@
-import {Typography, Button, Box} from '@mui/material'
+import {Typography, Box} from '@mui/material'
 
 const Title = ({view, toggleTitle}) => {
   return (

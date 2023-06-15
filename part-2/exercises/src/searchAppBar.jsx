@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import {AppBar, Box, Toolbar, IconButton, Typography, InputBase, Button} from '@mui/material';
+import {AppBar, Box, Toolbar, IconButton, InputBase, Button} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
