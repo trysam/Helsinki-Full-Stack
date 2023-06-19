@@ -10,6 +10,9 @@
     "deploy:full": "yarn run build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "samson",
+  "engines": {
+    "node": ">=18.16.0"
+  },
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
