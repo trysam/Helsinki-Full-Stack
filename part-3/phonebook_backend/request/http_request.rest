@@ -1,15 +1,18 @@
 GET http://localhost:3001/api/persons HTTP/1.1
 
 ###
-DELETE http://localhost:3001/api/persons/3 HTTP/1.1
+GET http://localhost:3001/api/persons/648c74b33572842fa21f99bf HTTP/1.1
+
+###
+DELETE http://localhost:3001/api/persons/648c74b33572842fa21f99bf HTTP/1.1
 
 ###
 POST http://localhost:3001/api/persons HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Toluwanimi",
-    "number": "0822-332-8595"
+    "name": "Adelugba Folake",
+    "number": "07465-352-87645"   
 }
 
 ###
