@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
 
+// eslint-disable-next-line no-undef
 if (process.argv.length<3){
-  console.log('input mongoDB password as the third argument variable')
+	console.log('input mongoDB password as the third argument variable')
 }
 
+// eslint-disable-next-line no-undef
 const password = process.argv[2]
 
 const url = `mongodb+srv://trysam2003:${password}@cluster0.f8r8rpb.mongodb.net/phonebookApp`
@@ -12,8 +14,8 @@ mongoose.set('strictQuery',false)
 
 // Define a Mongoose schema for your documents
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+	name: String,
+	number: String,
 })
 
 // Create a Mongoose model based on the schema
@@ -23,16 +25,16 @@ const Person = mongoose.model('Person', personSchema)
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(url)
-  .then(() => {
+	.then(() => {
 
-    Person.find({}).then(persons => {
-      persons.forEach(person => {
-        console.log(person)
-      })
-      mongoose.connection.close()
-    })       
-    // Use insertMany to batch load the documents
-    /*
+		Person.find({}).then(persons => {
+			persons.forEach(person => {
+				console.log(person)
+			})
+			mongoose.connection.close()
+		})       
+		// Use insertMany to batch load the documents
+		/*
     const person = new Person({
         name:`${process.argv[3]}`,
         number:`${process.argv[4]}`
@@ -55,7 +57,7 @@ mongoose.connect(url)
         mongoose.connection.close();
       });
      */ 
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error)
-  })
+	})
+	.catch((error) => {
+		console.error('Error connecting to MongoDB:', error)
+	})
