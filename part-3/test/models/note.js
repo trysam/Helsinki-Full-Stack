@@ -1,13 +1,15 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
+const logger = require('../utils/logger');
+const config = require('../utils/config');
 
 mongoose.set('strictQuery', false);
+logger.info(`connecting to ${config.url}`);
 
-const url = process.env.MONGODB_URI.toString();
-console.log(`connecting to ${url}`);
-
-mongoose.connect(url)
-  .then(() => console.log('connected to url'))
-  .catch((error) => console.log('error connecting to MongoDB:', error.message));
+mongoose.connect(config.url)
+  .then(() => logger.info('connected to url'))
+  .catch((error) => logger.info('error connecting to MongoDB:', error.message));
 
 const noteSchema = new mongoose.Schema({
   content: {
