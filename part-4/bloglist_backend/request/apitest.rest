@@ -1,0 +1,29 @@
+POST http://localhost:3001/api/blogs HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Things are getting better",
+    "author": "Paul Fooly",
+    "likes": "1234",
+    "url": "https://thingsaregettungbetter.com"       
+}
+
+###
+GET http://localhost:3001/api/blogs HTTP/1.1
+
+###
+DELETE http://localhost:3001/api/blogs/64aad05fe796a2ba81fae629 HTTP/1.1
+
+###
+GET http://localhost:3001/api/blogs/64aaceefe796a2ba81fae623 HTTP/1.1
+
+###
+PUT  http://localhost:3001/api/blogs/64aaceefe796a2ba81fae623 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Holy spirit my great teacher",
+    "author": "Kenneth Heagin",
+    "likes": "1234",
+    "url": "https://thingsaregettungbetter.com"       
+}

@@ -14,6 +14,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(express.static('build'));
 
 app.use(middleware.requestLogger);
+
 app.use('/api/notes', notesRouter);
 
 app.use(middleware.unknownEndpoint);
