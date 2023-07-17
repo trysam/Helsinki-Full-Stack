@@ -5,7 +5,7 @@ const logger = require('../utils/logger');
 const config = require('../utils/config');
 
 mongoose.set('strictQuery', false);
-logger.info(`connecting to ${config.url}`);
+logger.info(`connecting to ${config.MONGODB_URI}`);
 
 mongoose.connect(config.url)
   .then(() => logger.info('connected to url'))
