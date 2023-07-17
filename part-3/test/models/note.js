@@ -7,7 +7,7 @@ const config = require('../utils/config');
 mongoose.set('strictQuery', false);
 logger.info(`connecting to ${config.MONGODB_URI}`);
 
-mongoose.connect(config.url)
+mongoose.connect(config.MONGODB_URI)
   .then(() => logger.info('connected to url'))
   .catch((error) => logger.info('error connecting to MongoDB:', error.message));
 
