@@ -1,8 +1,10 @@
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
-const blogRouter = require('./controller/blogs')
+
+require('express-async-errors')
 const middleware = require('./util/middleware')
+const blogRouter = require('./controller/blogs')
 
 morgan.token('body', (req) => JSON.stringify(req.body));
 

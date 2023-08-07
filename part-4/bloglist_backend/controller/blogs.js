@@ -5,20 +5,22 @@ blogRouter.get('/welcome', (request, response) => {
     response.send("<h1>Dare Awokunle, your are doing great </h1>")
 })
 
-blogRouter.post('/', (request, response, next) =>{
+blogRouter.post('/', async (request, response) =>{
     const { body } = request;
     const blog = new Blogs({
         title: body.title,
         author: body.author,
-        likes: body.likes,
+        likes: body.likes || 0,
         url: body.url       
     })
 
-    blog.save().then(savedBlog => response.json(savedBlog)).catch(error => next(error))
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog)
 })
 
-blogRouter.get('/', (request, response, next) => {
-    Blogs.find({}).then(blogs => response.json(blogs)).catch(error => next(error))
+blogRouter.get('/', async (request, response) => {
+    const blogs = await Blogs.find({})
+    response.json(blogs)
 })
 
 blogRouter.get('/:id', (request, response, next) => {
