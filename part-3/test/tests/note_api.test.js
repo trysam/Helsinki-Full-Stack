@@ -9,109 +9,120 @@ const Note = require('../models/note');
 
 beforeEach(async () => {
   await Note.deleteMany({});
+  await Note.insertMany(testHelper.initialNotes);
+  // const noteObject = testHelper.initialNotes.map((note) => new Note(note));
+  // const promiseArray = noteObject.map((note) => note.save());
+  // await Promise.all(promiseArray);
+}, 30000);
 
-  const noteObject = testHelper.initialNotes.map((note) => new Note(note));
-  const promiseArray = noteObject.map((note) => note.save());
-  await Promise.all(promiseArray);
+describe('when there is initially some saved note', () => {
+  test('note are returned as json', async () => {
+    await api
+      .get('/api/notes')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  }, 1000000);
 
-  // let noteObject = new Note(testHelper.initialNotes[0]);
-  // await noteObject.save();
-  // noteObject = new Note(testHelper.initialNotes[1]);
-  // await noteObject.save();
+  test('there are two notes', async () => {
+    const response = await api.get('/api/notes');
+    expect(response.body).toHaveLength(testHelper.initialNotes.length);
+  }, 1000000);
+
+  test('a specific note is within the returned notes', async () => {
+    const response = await api.get('/api/notes');
+    const contents = response.body.map((r) => r.content);
+    expect(contents).toContain('Browser can execute only JavaScript');
+  }, 300000);
 });
 
-test('note are returned as json', async () => {
-  await api
-    .get('/api/notes')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-}, 1000000);
+describe('adding note', () => {
+  test('a valid note can be added', async () => {
+    const note = {
+      content: 'Sync/await in ES7 makes writing asyncronous function ease',
+      importance: true,
+    };
 
-test('there are two notes', async () => {
-  const response = await api.get('/api/notes');
-  expect(response.body).toHaveLength(testHelper.initialNotes.length);
-}, 1000000);
+    await api
+      .post('/api/notes')
+      .send(note)
+      .expect(201)
+      .expect('Content-type', /application\/json/);
 
-test('Notes contain "Browser can execute only JavaScript"', async () => {
-  const response = await api.get('/api/notes');
-  const contents = response.body.map((r) => r.content);
-  expect(contents).toContain('Browser can execute only JavaScript');
-}, 300000);
+    const notesAtEnd = await testHelper.notesInDB();
+    expect(notesAtEnd).toHaveLength(testHelper.initialNotes.length + 1);
 
-test('a valid note can be added', async () => {
-  const note = {
-    content: 'Sync/await in ES7 makes writing asyncronous function ease',
-    importance: true,
-  };
+    const contents = notesAtEnd.map((n) => n.content);
+    expect(contents).toContain(note.content);
+  }, 100000);
 
-  await api
-    .post('/api/notes')
-    .send(note)
-    .expect(201)
-    .expect('Content-type', /application\/json/);
+  test('fails with statusCode 400 if data invalid', async () => {
+    const note = {
+      importance: true,
+    };
 
-  const notesAtEnd = await testHelper.notesInDB();
-  expect(notesAtEnd).toHaveLength(testHelper.initialNotes.length + 1);
+    await api
+      .post('/api/notes')
+      .send(note)
+      .expect(400);
 
-  const contents = notesAtEnd.map((n) => n.content);
-  expect(contents).toContain(note.content);
-}, 100000);
+    const noteAtEnd = await testHelper.notesInDB();
+    expect(noteAtEnd).toHaveLength(testHelper.initialNotes.length);
+  });
+});
 
-test('note is not saved if incomplete', async () => {
-  const note = {
-    importance: true,
-  };
+describe('viewing a specific note', () => {
+  test('succeeds with a valid id', async () => {
+    const notesAtStart = await testHelper.notesInDB();
+    const noteToView = notesAtStart[0];
 
-  await api
-    .post('/api/notes')
-    .send(note)
-    .expect(400);
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect('Content-type', /application\/json/);
 
-  const noteAtEnd = await testHelper.notesInDB();
-  expect(noteAtEnd).toHaveLength(testHelper.initialNotes.length);
-}, 100000);
+    expect(resultNote.body).toEqual(noteToView);
+  }, 100000);
 
-test('a specific note can be view', async () => {
-  const notesAtStart = await testHelper.notesInDB();
-  const noteToView = notesAtStart[0];
+  test('fails with statusCode 404 if noteID does not exist', async () => {
+    const validNotExistingID = await testHelper.nonExistingID();
+    await api.get(`/api/blogs/${validNotExistingID}`).expect(404);
+  }, 10000);
+});
 
-  const resultNote = await api
-    .get(`/api/notes/${noteToView.id}`)
-    .expect(200)
-    .expect('Content-type', /application\/json/);
+describe('deleting a specific note', () => {
+  test('a specific note can be deleted', async () => {
+    const notesAtStart = await testHelper.notesInDB();
+    const noteToDelete = notesAtStart[0];
 
-  expect(resultNote.body).toEqual(noteToView);
-}, 100000);
+    await api
+      .delete(`/api/notes/${noteToDelete.id}`)
+      .expect(204);
 
-test('a specific note can be deleted', async () => {
-  const notesAtStart = await testHelper.notesInDB();
-  const noteToDelete = notesAtStart[0];
+    const notesAfter = await testHelper.notesInDB();
+    const contentsArray = notesAfter.map((note) => note.content);
 
-  await api
-    .delete(`/api/notes/${noteToDelete.id}`)
-    .expect(200)
-    .expect('Content-type', /application\/json/);
+    expect(notesAfter).toHaveLength(testHelper.initialNotes.length - 1);
 
-  const notesAfter = await testHelper.notesInDB();
+    expect(contentsArray).not.toContain(noteToDelete.content);
+  });
+});
 
-  expect(notesAfter).toHaveLength(testHelper.initialNotes.length - 1);
-}, 100000);
+describe('modifying a specific note', () => {
+  test('a specific note can be modified', async () => {
+    const notesAtStart = await testHelper.notesInDB();
+    const noteToModify = notesAtStart[0];
 
-test('a specific note can be modified', async () => {
-  const notesAtStart = await testHelper.notesInDB();
-  const noteToModify = notesAtStart[0];
-  console.log(noteToModify);
+    const note = { important: true };
 
-  const note = { content: 'The lord is great', important: true };
+    const modifiedNote = await api
+      .put(`/api/notes/${noteToModify.id}`)
+      .send(note)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
-  const modifiedNote = await api
-    .put(`/api/notes/${noteToModify.id}`)
-    .send(note)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-
-  expect(modifiedNote.body.content).toEqual('The lord is great');
-}, 100000);
+    expect(modifiedNote.body.important).toEqual(true);
+  }, 100000);
+});
 
 afterAll(async () => {
   await mongoose.connection.close();

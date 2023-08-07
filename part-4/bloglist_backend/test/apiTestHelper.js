@@ -30,7 +30,23 @@ const blogsInDB = async () => {
  
 }
 
+const idNotInDB = async () => {
+    const newBlog = {
+        "title":"blog is deleted immediately",
+        "author": "Paul Fooly",
+        "likes": "1234",
+        "url": "https://thingsaregettungbetter.com"       
+    }
+
+    const blogToDelete = await new blogModel(newBlog);
+    await blogToDelete.save();
+    await blogToDelete.deleteOne();
+
+    return blogToDelete._id.toString()
+}
+
 module.exports = {
     initialBlogs,
-    blogsInDB
+    blogsInDB,
+    idNotInDB 
 }

@@ -29,7 +29,7 @@ blogRouter.get('/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-blogRouter.put('/:id', (request, response, next) => {
+blogRouter.put('/:id', async (request, response) => {
     const {body} = request
     console.log(body)
     const blog = {
@@ -39,14 +39,14 @@ blogRouter.put('/:id', (request, response, next) => {
         url: body.url        
     }
 
-    Blogs.findByIdAndUpdate(request.params.id,blog, {new:true})
-        .then(updatedBlog => response.json(updatedBlog))
-        .catch(error => next(error))
+    const updatedBlog = await Blogs.findByIdAndUpdate(request.params.id,blog, {new:true})
+        response.status(201).json(updatedBlog);
+        
 })
 
 blogRouter.delete('/:id',(request, response, next) => {
     Blogs.findByIdAndRemove(request.params.id)
-        .then(deletedBlog => deletedBlog ? response.json(deletedBlog) : response.status(404).end)
+        .then(deletedBlog => deletedBlog ? response.status(204).json(deletedBlog) : response.status(404).end)
         .catch(error => next(error))
 })
 

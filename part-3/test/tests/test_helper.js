@@ -16,7 +16,7 @@ const nonExistingID = async () => {
     content: 'This will be deleted',
   };
 
-  const note = await new Note({ newNote });
+  const note = await new Note(newNote);
   await note.save();
   await note.deleteOne();
 
