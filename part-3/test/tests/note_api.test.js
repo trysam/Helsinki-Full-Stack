@@ -1,4 +1,5 @@
 const mongoose = require('mongoose').set('bufferTimeoutMS', 1000000);
+const bcrypt = require('bcrypt');
 const supertest = require('supertest');
 const testHelper = require('./test_helper');
 const app = require('../app');
@@ -6,6 +7,7 @@ const app = require('../app');
 const api = supertest(app);
 
 const Note = require('../models/note');
+const User = require('../models/user');
 
 beforeEach(async () => {
   await Note.deleteMany({});
@@ -37,9 +39,11 @@ describe('when there is initially some saved note', () => {
 
 describe('adding note', () => {
   test('a valid note can be added', async () => {
+    const userInDB = await testHelper.userInDB();
     const note = {
       content: 'Sync/await in ES7 makes writing asyncronous function ease',
       importance: true,
+      userId: userInDB[0].id,
     };
 
     await api
@@ -56,8 +60,10 @@ describe('adding note', () => {
   }, 100000);
 
   test('fails with statusCode 400 if data invalid', async () => {
+    const userInDB = await testHelper.userInDB();
     const note = {
       importance: true,
+      userId: userInDB[0].id,
     };
 
     await api
@@ -122,6 +128,46 @@ describe('modifying a specific note', () => {
 
     expect(modifiedNote.body.important).toEqual(true);
   }, 100000);
+});
+
+describe('when there is initial one note in DB', () => {
+  beforeEach(async () => {
+    await User.deleteMany();
+    const passwordHash = await bcrypt.hash('password', 10);
+    const user = new User({ username: 'root', name: 'admin', passwordHash });
+    await user.save();
+  });
+
+  test('a user is saved successfully', async () => {
+    const userToBeSaved = {
+      username: 'trysam2003',
+      name: 'adedayo folashade',
+      password: 'tthksteh',
+    };
+
+    const initialUsers = await testHelper.userInDB();
+    await api.post('/api/users').send(userToBeSaved).expect(201).expect('Content-Type', /application\/json/);
+    const usersNow = await testHelper.userInDB();
+    const userNamesInDB = usersNow.map((user) => user.username);
+
+    expect(usersNow).toHaveLength(initialUsers.length + 1);
+    expect(userNamesInDB).toContain(userToBeSaved.username);
+  });
+
+  test('creation fail with proper error code if the username is not unique', async () => {
+    const userToBeSaved = {
+      username: 'root',
+      name: 'adedayo dd',
+      password: 'tthksteh',
+    };
+
+    const initialUsers = await testHelper.userInDB();
+    const response = await api.post('/api/users').send(userToBeSaved).expect(400).expect('Content-Type', /application\/json/);
+    const usersNow = await testHelper.userInDB();
+
+    expect(response.body.error).toContain('expected `username` to be unique');
+    expect(usersNow).toEqual(initialUsers);
+  });
 });
 
 afterAll(async () => {

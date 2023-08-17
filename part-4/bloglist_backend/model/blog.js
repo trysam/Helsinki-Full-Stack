@@ -18,7 +18,7 @@ const blogSchema = new mongoose.Schema({
         },
     author: {
         type: String,
-        require: true
+        required: true
     },
 
     url: String,
@@ -26,7 +26,14 @@ const blogSchema = new mongoose.Schema({
     likes: {
        type: Number,
        required: true
-    }
+    },
+
+    users: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 })
 
 blogSchema.set('toJSON', {

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const notesRouter = require('express').Router();
-const Note = require('../models/note');
-const User = require('../models/user');
+const Note = require('../model/note');
+const User = require('../model/user');
 
 notesRouter.get('/welcome', (request, response) => {
   response.send('<h1>Welcome World</h1>');

@@ -1,18 +1,56 @@
 POST http://localhost:3001/api/blogs HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer 
 
 {
-    "title":"Greater things are yet to come",
-    "author": "Paul Fooly",
-    "likes": "1234",
+    "title":"Fine all chjc",
+    "author": "Dadhgdhgsn",
+    "likes": "134",
     "url": "https://thingsaregettungbetter.com"       
 }
 
 ###
+
+POST http://localhost:3001/api/notes HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IktlaGluZCIsImlkIjoiNjRkZGFiMWMwMzRiN2FjYjdkMTZkZTQzIiwiaWF0IjoxNjkyMjY5NDg3LCJleHAiOjE2OTIyNzMwODd9.hVsAkn6pQo5qBAp3Rt9KCHVkQIiFLfTLL8X5sgNwiYw
+
+{
+    "content": "Whala has no limitation ",
+    "important": false  
+}
+
+###
+
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"Goriola Bakare",
+    "username": "goriola",
+    "password": "tut"      
+}
+
+###
+
+
+POST http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{   
+    "username": "Kehind",
+    "password": "tutud"     
+}
+
+###
+
 GET http://localhost:3001/api/blogs HTTP/1.1
 
 ###
-DELETE http://localhost:3001/api/blogs/64aad05fe796a2ba81fae629 HTTP/1.1
+
+DELETE http://localhost:3001/api/blogs/64de1ad6a947802c1142fb1d HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IktlaGluZCIsImlkIjoiNjRkZGFiMWMwMzRiN2FjYjdkMTZkZTQzIiwiaWF0IjoxNjkyMjc3NTk1LCJleHAiOjE2OTIyODExOTV9.4EvqvOhc8-odbCk-4Y2huquyiqc5aSBgn_ICv7sjY-4
 
 ###
 GET http://localhost:3001/api/blogs/64aaceefe796a2ba81fae623 HTTP/1.1

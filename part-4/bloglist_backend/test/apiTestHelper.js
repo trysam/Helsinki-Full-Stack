@@ -1,5 +1,4 @@
 const blogModel = require('../model/blog')
-
 const initialBlogs = [
     {
         title:"Holy spirit my great teacher",
@@ -45,8 +44,24 @@ const idNotInDB = async () => {
     return blogToDelete._id.toString()
 }
 
+const usersLoginDetails = [
+    {
+        username: "stonewire",
+        password: "pass1word"
+    },
+
+    {
+        username: "Tunderline",
+        password: "pass2word"
+    }
+
+]
+
+
 module.exports = {
     initialBlogs,
     blogsInDB,
-    idNotInDB 
+    idNotInDB,
+    usersLoginDetails
+
 }
