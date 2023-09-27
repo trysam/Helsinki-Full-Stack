@@ -1,15 +1,21 @@
 import axios from "axios";
 
-const baseUrl = "/api/notes"
+const baseUrl = "/api/notes";
+let token = null;
 
-const getAllResourse = () => {
-    const promise = axios.get(baseUrl);
-    return promise.then(resource => resource.data);  
+const setToken = newToken => {
+    token = `Bearer ${newToken}`
 }
 
-const addResource = obj => {
-    const promise = axios.post(baseUrl, obj);
-    return promise.then(resource => resource.data);   
+const getAllResource = async () => {
+    const promise = await axios.get(baseUrl);
+    return promise.data  
+}
+
+const addResource = async newObject => {
+    const config = { headers: {'Authorization': token} };
+    const promise = await axios.post(baseUrl, newObject, config);
+    return promise.data;   
 }
 
 const updateResource = (id, obj) => {
@@ -21,5 +27,5 @@ const deleteResource = (id) => {
     return axios.delete(`${baseUrl}/${id}`);    
 }
 
-const nodeService = {getAllResourse, addResource, updateResource, deleteResource}
-export default nodeService;
+const noteService = {getAllResource, addResource, updateResource, deleteResource, setToken}
+export default noteService;

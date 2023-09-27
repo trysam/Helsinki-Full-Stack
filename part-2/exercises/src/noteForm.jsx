@@ -2,7 +2,7 @@ import Button from "@mui/material/Button"
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 
-const Form = ({addNote, handleChange, input}) => {
+const NoteForm = ({addNote, handleChange, input}) => {
   return (
    <Box m="40px 20px 20px 20px">
         <form onSubmit={addNote} >
@@ -13,4 +13,4 @@ const Form = ({addNote, handleChange, input}) => {
   )
 }
 
-export default Form
+export default NoteForm

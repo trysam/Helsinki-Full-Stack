@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 import {red} from "@mui/material/colors";
-import { Component } from "react";
+
 
 const theme = createTheme({
     palette:{

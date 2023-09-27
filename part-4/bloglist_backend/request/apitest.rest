@@ -1,6 +1,6 @@
 POST http://localhost:3001/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndpbGRUdW5kZSIsImlkIjoiNjRkYzk5MjY1ZmE4YWViMzBmNjI2Y2UyIiwiaWF0IjoxNjkyNTM5MTY3LCJleHAiOjE2OTI1NDI3Njd9.NXywmc0BvfY2b7ghV9V37r6PlpAd1mxkzM2hVuoiZXM
 
 {
     "title":"Fine all chjc",

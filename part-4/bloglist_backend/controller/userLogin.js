@@ -21,10 +21,14 @@ loginRouter.post('/', async (request, response) => {
         id: user._id
     }
 
-    const userToken = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 60 * 60})
+    const userToken = jwt.sign(userForToken, process.env.SECRET, {expiresIn: 300})
 
     response.status(200).send({userToken, username:user.username, name:user.name})
 
+})
+
+loginRouter.get('/', (request, response) => {
+    response.send('<h2>login api is available</h2>')
 })
 
 module.exports = loginRouter;

@@ -46,7 +46,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar({toggleTitle, view}) {
+export default function SearchAppBar({toggleTitle, view, user, loginVisible, setLoginVisible, handleLogout}) {
+  const hideWhenVisible = {display: loginVisible ? 'none' : "" }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -62,8 +63,16 @@ export default function SearchAppBar({toggleTitle, view}) {
           </IconButton>
           <Box component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>          
             <Button variant='contained' onClick={toggleTitle}>
-                  Show {view?"important": "All"}
+                  Show {view ? "important" : "All"}
             </Button> 
+          </Box> 
+          <Box component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>          
+           { 
+            user === null 
+              ? <Button variant='contained' style={hideWhenVisible} onClick={() => setLoginVisible(true)}> Login </Button> 
+              : <Button variant='contained' onClick={handleLogout}> Log out </Button> 
+            
+            }
           </Box> 
           <Search>
             <SearchIconWrapper>
