@@ -10,6 +10,19 @@ const notesRouter = require('./controller/notes')
 const userRouter = require('./controller/users')
 const loginRouter = require('./controller/userLogin')
 
+const mongoose = require('mongoose')
+const logger = require('./util/logger')
+const config = require('./util/config')
+
+mongoose.set('strictQuery',false)
+
+logger.info('connecting to ', config.MONGODB_URI)
+
+mongoose.connect(config.MONGODB_URI)
+    .then(() => logger.info('Connected to MongoDB Server'))
+    .catch(error => logger.info('error connecting to MongDB', error.message))
+
+
 morgan.token('body', (req) => JSON.stringify(req.body));
 
 const app = express();
