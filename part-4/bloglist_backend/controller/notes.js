@@ -39,9 +39,10 @@ notesRouter.put('/:id', async (request, response) => {
 // eslint-disable-next-line consistent-return
 notesRouter.post('/', async (request, response) => {
   const { body } = request;
-
-  const decodedToken = jwt.verify(helper.getTokenFrom(request), process.env.SECRET);
-
+  const userToken = helper.getTokenFrom(request)
+  console.log('token is', userToken)
+  const decodedToken = jwt.verify(userToken, process.env.SECRET);
+ 
   if (!decodedToken.id) {
     return response.json({ error: 'token invalid' });
   }

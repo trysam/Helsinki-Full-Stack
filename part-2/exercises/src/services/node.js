@@ -3,9 +3,8 @@ import axios from "axios";
 const baseUrl = "/api/notes";
 let token = null;
 
-const setToken = newToken => {
-    token = `Bearer ${newToken}`
-}
+const setToken = newToken => token = `Bearer ${newToken}`
+
 
 const getAllResource = async () => {
     const promise = await axios.get(baseUrl);
@@ -18,9 +17,9 @@ const addResource = async newObject => {
     return promise.data;   
 }
 
-const updateResource = (id, obj) => {
-    const promise = axios.put(`${baseUrl}/${id}`, obj);
-    return promise.then(resource => resource.data);
+const updateResource = async (id, obj) => {
+    const promise = await axios.put(`${baseUrl}/${id}`, obj);
+    return promise.data;
 }
 
 const deleteResource = (id) => {
