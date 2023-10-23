@@ -1,6 +1,9 @@
 const Blogs = require('../model/blog') 
 const User = require('../model/user')
 const blogRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
+const helper = require('../util/list_helper')
+
 
 blogRouter.get('/welcome', (request, response) => {
     response.send("<h1>Dare Awokunle, your are doing great </h1>")
@@ -9,12 +12,15 @@ blogRouter.get('/welcome', (request, response) => {
 
 blogRouter.post('/', async (request, response) =>{
     const { body } = request;
-   
-    if (!(request.user && request.user.id)) {
+    
+    const authorization = helper.getTokenFrom(request)    
+    const decodedToken = jwt.verify(authorization, process.env.SECRET)
+ 
+    if (!decodedToken.id) {
         return response.status(401).json({error: 'invalidToken'})
     }
     
-    const user = await User.findById(request.user.id)
+    const user = await User.findById(decodedToken.id)
 
     const blog = new Blogs({
         title: body.title,
@@ -60,7 +66,10 @@ blogRouter.put('/:id', async (request, response) => {
 
 blogRouter.delete('/:id', async (request, response) => {
     
-    const user = await User.findById(request.user.id)
+    const token = helper.getTokenFrom(request)
+    console.log(token)
+    const userToken = jwt.verify(token, process.env.SECRET)
+    const user = await User.findById(userToken.id)
     const blogsArray = user.blogs.map(blog => blog.toString())
     
     if (blogsArray.includes(request.params.id.toString())){

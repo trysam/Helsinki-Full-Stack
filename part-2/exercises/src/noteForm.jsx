@@ -6,8 +6,8 @@ const NoteForm = ({addNote, handleChange, input}) => {
   return (
    <Box m="40px 20px 20px 20px">
         <form onSubmit={addNote} >
-            <Input value={input} onChange={handleChange} placeholder={"Write new note here"} variant="soft" fullWidth />
-            <Button sx={{mt:"10px"}} type="submit" variant="contained" >Add Note</Button>
+            <Input id="noteInput" value={input} onChange={handleChange} placeholder={"Write new note here"} variant="soft" fullWidth />
+            <Button id="addNoteButton" sx={{mt:"10px"}} type="submit" variant="contained" >Add Note</Button>
         </form>
     </Box>
   )

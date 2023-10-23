@@ -24,11 +24,11 @@ const Note = ({note, toggleImportance, deleteNote}) => {
                     filter: "progid: DXImageTransform.Microsoft.gradient( startColorstr='#1976d2', endColorstr='#54d9eb', GradientType=1 )",
                 }}
             >                             
-                    <Typography gutterBottom variant="body1" display="flex" textAlign="center" justifyContent="center" alignItems="center" height="150%" p="30px 10px 10px 10px">
+                    <Typography className="note" gutterBottom variant="body1" display="flex" textAlign="center" justifyContent="center" alignItems="center" height="150%" p="30px 10px 10px 10px">
                         {note.content}
                     </Typography>                    
                 <Box p="0 20px 20px 20px " display="flex" justifyContent="space-between">
-                    <MyButton size="small" color="primary" variant="contained" endIcon={<SendIcon />} onClick={toggleImportance}>{label}</MyButton>
+                    <MyButton id="toggleImpotantButton" size="small" color="primary" variant="contained" endIcon={<SendIcon />} onClick={toggleImportance}>{label}</MyButton>
                     <MyButton size="small" color="secondary" variant="contained" startIcon={<DeleteIcon/>} onClick={deleteNote}>DeleteNote</MyButton>          
                 </Box>
             </Box> 

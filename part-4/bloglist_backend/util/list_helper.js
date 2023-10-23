@@ -34,10 +34,17 @@ const mostLikeAuthor = (blogs) => {
     return {
         author: Object.keys(totalLikesByAuthor).find(key => totalLikesByAuthor[key] === maxLikes),
         likes: maxLikes
-    }      
+    } 
+
 }
 
-
+const getTokenFrom = (request) => {
+    const authorization = request.get('Authorization')
+    if(authorization && authorization.startsWith('Bearer ')){
+        return authorization.replace('Bearer ', '')
+    }
+    return null;
+}
 
 
 module.exports = {
@@ -45,5 +52,6 @@ module.exports = {
     totalLikes,
     favouriteLikes,
     highestBlogsAuthor,
-    mostLikeAuthor
+    mostLikeAuthor,
+    getTokenFrom
 };

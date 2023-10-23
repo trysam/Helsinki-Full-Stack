@@ -8,6 +8,7 @@ import SearchAppBar from "./searchAppBar";
 import noteService from "./services/node";
 import loginService from "./services/login";
 import LoginControl from "./loginControl";
+import Notification from "./notification";
 
 
 const App = () => {
@@ -16,9 +17,11 @@ const App = () => {
   const [view, setView] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [appUser, setAppUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
+
 
   useEffect(() => {
     noteService.getAllResource().then(      
@@ -29,8 +32,8 @@ const App = () => {
     const loggedNoteUser = window.localStorage.getItem('loggedNoteAppUser');
     if (loggedNoteUser) {
       const user = JSON.parse(loggedNoteUser)
-      setUser(user);
-      noteService.setToken(user.token)
+      setAppUser(user);
+      noteService.setToken(user.userToken)
     }
   },[])
 
@@ -42,10 +45,13 @@ const App = () => {
       const user = await loginService.login({username, password})          
 
       window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
-      noteService.setToken(user.token)     
+      console.log(user.userToken)
+      noteService.setToken(user.userToken)     
       setUsername('')
       setPassword('')
-      setUser(user)     
+      setAppUser(user)
+      setSuccessMessage(`You are welcomed ${user.username}`) 
+      setTimeout( () => {setSuccessMessage(null)}, 5000 )    
     } catch(exemption){
       setErrorMessage('Wrong Credentials')
       setTimeout( () => {setErrorMessage(null)}, 5000 )
@@ -62,13 +68,23 @@ const App = () => {
 
   const toggleTitle =  () => setView(!view);
   
-  const toggleImportance = (id) => {   
+  const toggleImportance = async (id) => {   
+    
     const note = notes.find(note => note.id === id);
     const changeNote  = {...note, important:!note.important}
-
-    noteService.updateResource(id,changeNote).then(
-      data => setNote(notes.map(note => note.id !== id ? note : data))
-    ).catch(error => alert(`${note.content} " has been deleted"`))           
+    try{
+      const data = noteService.updateResource(id,changeNote)
+      setNote(notes.map(note => note.id !== id ? note : data))
+      setSuccessMessage(`note importance is changed`)
+      setTimeout(() => {
+        setSuccessMessage("")
+      }, 1000);
+      }catch(exemption){
+        setErrorMessage(exemption.message)
+        setTimeout(() => {
+          setErrorMessage("")
+        }, 1000);
+      }               
   }
 
   const handleChange = (event) =>{
@@ -94,7 +110,7 @@ const App = () => {
         setNote(notes.concat(data));
         setInput(' ');
       } 
-    )
+    ).catch(error => error)
   }
 
   const noteToDisplay = view ? notes : notes.filter(item => item.important);      
@@ -108,13 +124,13 @@ const App = () => {
         handleLogout={handleLogout}
         loginVisible={loginVisible}
         setLoginVisible={setLoginVisible}
-        user={user}
+        user={appUser}
       />
       <main>
         <CssBaseline />
         <Title />
-
-        {user === null
+        <Notification successMssage={successMessage} errorMessage={errorMessage}/>
+        {appUser === null
           ? <LoginControl 
               loginHandler={handleLogin} 
               password={password} 

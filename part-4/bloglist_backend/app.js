@@ -10,12 +10,11 @@ const notesRouter = require('./controller/notes')
 const userRouter = require('./controller/users')
 const loginRouter = require('./controller/userLogin')
 
-const mongoose = require('mongoose')
 const logger = require('./util/logger')
 const config = require('./util/config')
+const mongoose = require('mongoose')
 
 mongoose.set('strictQuery',false)
-
 logger.info('connecting to ', config.MONGODB_URI)
 
 mongoose.connect(config.MONGODB_URI)
@@ -37,6 +36,11 @@ app.use('/api/blogs', middleware.userExtractorFromToken, blogRouter)
 app.use('/api/notes', notesRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+
+if(process.env.NODE_ENV === 'test'){
+    const testingRouter = require('./controller/testing')
+    app.use('/api/testing', testingRouter)
+}
 
 
 app.use(middleware.unknownEndpoint)

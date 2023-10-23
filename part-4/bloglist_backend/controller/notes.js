@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const notesRouter = require('express').Router();
 const Note = require('../model/note');
 const User = require('../model/user');
+const helper = require('../util/list_helper')
 
 notesRouter.get('/welcome', (request, response) => {
   response.send('<h1>Welcome World</h1>');
@@ -34,20 +35,14 @@ notesRouter.put('/:id', async (request, response) => {
   response.json(updatedNote);
 });
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('Authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-};
 
 // eslint-disable-next-line consistent-return
 notesRouter.post('/', async (request, response) => {
   const { body } = request;
-
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.Secret);
-
+  const userToken = helper.getTokenFrom(request)
+  console.log('token is', userToken)
+  const decodedToken = jwt.verify(userToken, process.env.SECRET);
+ 
   if (!decodedToken.id) {
     return response.json({ error: 'token invalid' });
   }
