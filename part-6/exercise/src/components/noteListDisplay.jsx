@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toggleAction } from "../reducers/reducer";
+import { toggleImportantOf } from "../reducers/noteReducer";
 
 const Note = ({note, toggleImportant}) => {
     return(
@@ -15,14 +15,20 @@ const Note = ({note, toggleImportant}) => {
 
 const Notes = () => {
     const dispatch = useDispatch()
-    const notes = useSelector(state => state)
+    const notes = useSelector(({notes, filter,_ }) => { 
+        if (filter === 'ALL'){            
+            return notes}
+        return filter === 'IMPORTANT' 
+            ? notes.filter(note => note.important)
+            : notes.filter(note => !note.important)
+    })
 
     return(
         <ul>
             {notes.map(note => 
                 <Note 
                     note={note} 
-                    toggleImportant={() => dispatch(toggleAction(note.id))} 
+                    toggleImportant={() => dispatch(toggleImportantOf(note.id))} 
                     key={note.id}
                 />
             )}
