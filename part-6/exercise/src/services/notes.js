@@ -13,4 +13,9 @@ const saveNote = async (content) => {
   return response.data
 }
 
-export default { getAll , saveNote }
+const changeNote = async (id, modifiedNote) => {
+  const response = await axios.put(`${baseUrl}/${id}`, modifiedNote)
+  return response.data
+}
+
+export default { getAll , saveNote, changeNote }
