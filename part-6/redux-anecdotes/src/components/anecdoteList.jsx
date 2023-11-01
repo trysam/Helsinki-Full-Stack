@@ -1,17 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useSelector, useDispatch } from 'react-redux'
-import { vote } from '../reducers/anecdoteReducer'
-import { createNotification, removeNotification } from '../reducers/notificationReducer'
+import { addVote } from '../reducers/anecdoteReducer'
+import { addNotification } from '../reducers/notificationReducer'
+
 
 
 
 const NewAnecdotes = ({anecdote}) => {
     const dispatch = useDispatch()
+    const anecdotes = useSelector(state => state.anecdote) 
 
-    const handleVote = () => {
-        dispatch(vote(anecdote.id))
-        dispatch(createNotification(`you voted "${anecdote.content}"`))
-        setTimeout(() => dispatch(removeNotification(null)), 5000)
+    const handleVote = () => {       
+        const id = anecdote.id
+        const anecdoteToVote = anecdotes.filter(anecdote => anecdote.id === id)
+        const votedAnecdote = {...anecdoteToVote[0], votes: anecdoteToVote[0].votes + 1}
+        dispatch(addVote(votedAnecdote))        
+        dispatch(addNotification(`you voted "${anecdote.content}"`))
     }
 
     return (
