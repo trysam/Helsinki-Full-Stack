@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { Routes, Route, Link, Navigate, useNavigate,  useMatch } from 'react-router-dom'
 import { useState } from 'react' 
+import DisplayCounter from './components/counter'
+import SignOnForm from './components/SignOnForm'
 
 const Home = () => (
   <div>
@@ -44,12 +46,12 @@ const Users = () => (
   </div>
 )
 
-const Login = (props) => {
+const Login = ({onLogin}) => {
   const navigate = useNavigate()
 
   const onSubmit = (event) => {
     event.preventDefault()
-    props.onLogin('mluukkai')
+    onLogin(event.target.username.value)
     navigate('/')
   }
 
@@ -58,7 +60,7 @@ const Login = (props) => {
       <h2>login</h2>
       <form onSubmit={onSubmit}>
         <div>
-          username: <input />
+          username: <input name='username'/>
         </div>
         <div>
           password: <input type='password' />
@@ -109,19 +111,23 @@ const App = () => {
   }
 
   return (
-    <div>   
+    <div>  
       <div>
         <Link style={padding} to={'/'}>home</Link>
         <Link style={padding} to={'/notes'}>notes</Link>
-        <Link style={padding} to={'/users'}>users</Link>
+        <Link style={padding} to={'/users'}>users</Link>        
+        <Link style={padding} to={'/counterApp'}>CounterApp</Link>
+        <Link style={padding} to={'/signOn'}>Sign-On</Link> 
         {user ? <em> {`Welcome ${user}`} </em> : <Link style={padding} to={'/login'} >Login</Link>}
       </div>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/notes' element={<Notes notes={notes} />}/>
         <Route path='/users' element={user ? <Users /> : <Navigate replace to={'/login'} />} />
-        <Route path='/login' element={<Login onLogin={onLogin}/>}/> 
+        <Route path='/login' element={<Login onLogin={onLogin} />}/> 
+        <Route path='/signOn' element={<SignOnForm />} />        
         <Route path='/notes/:id' element={<Note note={note}/>}/> 
+        <Route path='/counterApp' element={<DisplayCounter />}/>
       </Routes>
     <footer>
       <br />
