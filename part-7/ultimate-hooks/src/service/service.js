@@ -1,7 +1,8 @@
 import axios from "axios";
 
+
 const setToken = newToken => {
-    return `bearer ${newToken}`
+    return `Bearer ${newToken}`
   }
 
 const getAll = async(baseUrl) => {
@@ -11,9 +12,7 @@ const getAll = async(baseUrl) => {
 
 const create = async(baseUrl, objToCreate, token ) => {
     const config = {
-        headers: {
-            Authorization: token
-        }    
+        headers: { "Authorization": token }    
     }
     const response = await axios.post(baseUrl,objToCreate, config)
     return response.data
