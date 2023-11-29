@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Routes, Route, Link, Navigate, useNavigate,  useMatch } from 'react-router-dom'
+import { Routes, Route, Link, Navigate, useNavigate,  useMatch} from 'react-router-dom'
 import { useState } from 'react' 
 import DisplayCounter from './components/counter'
 import SignOnForm from './components/SignOnForm'
+import {Table, Form, Button, Alert, Navbar, Nav} from 'react-bootstrap';
 
 const Home = () => (
   <div>
@@ -22,16 +23,24 @@ const Note = ({ note }) => {
   )
 }
 
-const Notes = ({ notes }) => (
+const Notes = ({ notes}) => (
   <div>
-    <h2>Notes</h2>
-    <ul>
-      {notes.map(note =>
-        <li key={note.id}>
-          <Link to={`/notes/${note.id}`}>{note.content}</Link>
-        </li>
-      )}
-    </ul>
+    <h2>Notes</h2>    
+    <Table striped>
+      <tbody>   
+         {notes.map(note =>
+             <tr key={note.id}>         
+              <td>
+                <Link to={`/notes/${note.id}`}>{note.content} </Link>
+              </td>
+              <td>
+                {note.user}
+              </td>  
+            </tr>     
+          )}
+            
+      </tbody>
+    </Table>
   </div>
 )
 
@@ -56,17 +65,17 @@ const Login = ({onLogin}) => {
   }
 
   return (
-    <div>
+    <div className='container' style={{textAlign:''}}>
       <h2>login</h2>
-      <form onSubmit={onSubmit}>
-        <div>
-          username: <input name='username'/>
-        </div>
-        <div>
-          password: <input type='password' />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      <Form onSubmit={onSubmit}>
+        <Form.Group>
+          <Form.Label> Username: </Form.Label> 
+          <Form.Control type='text' name='username' style={{maxWidth:"20rem"}}/><br/>
+          <Form.Label>Password: </Form.Label>
+          <Form.Control type='password' style={{maxWidth:"20rem"}} /><br/>      
+          <Button variant="primary" type="submit">login</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
@@ -97,9 +106,14 @@ const App = () => {
   ])
 
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
 
   const onLogin = (user) => {
     setUser(user)
+    setMessage(`welcome ${user}`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 10000)
   }
 
   const match = useMatch('/notes/:id')
@@ -107,19 +121,38 @@ const App = () => {
 
 
   const padding = {
-    padding: 5
+    padding: 5,
+    textDecoration:'none'
   }
 
   return (
-    <div>  
-      <div>
-        <Link style={padding} to={'/'}>home</Link>
-        <Link style={padding} to={'/notes'}>notes</Link>
-        <Link style={padding} to={'/users'}>users</Link>        
-        <Link style={padding} to={'/counterApp'}>CounterApp</Link>
-        <Link style={padding} to={'/signOn'}>Sign-On</Link> 
-        {user ? <em> {`Welcome ${user}`} </em> : <Link style={padding} to={'/login'} >Login</Link>}
-      </div>
+    <div className='container'>  
+      <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse>
+          <Nav className='me-auto'>
+            <Nav.Link href='#' as='span'>
+               <Link style={padding } to={'/'}>home</Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to={'/notes'}>notes</Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to={'/users'}>users</Link> 
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to={'/counterApp'}>CounterApp</Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to={'/signOn'}>Sign-On</Link> 
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+            {user ? <em> {`Welcome ${user}`} </em> : <Link style={padding} to={'/login'} >Login</Link>}
+            </Nav.Link>     
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      {message && <Alert variant='success'>{message} </Alert>}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/notes' element={<Notes notes={notes} />}/>
